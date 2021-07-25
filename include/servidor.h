@@ -3,13 +3,15 @@
 #include <string>
 #include <vector>
 
+#include "canaltexto.h"
+
 class Servidor{
 private: 
 	int usuarioDonoId;
 	std::string nome;
 	std::string descricao;
 	std::string codigoConvite;
-	//vector<CanalTexto> canaisTexto;
+	std::vector<CanalTexto> canaisTexto;
 	std::vector<int> participantesIDs;
 
 public: 

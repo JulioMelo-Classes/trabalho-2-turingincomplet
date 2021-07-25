@@ -3,10 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "mensagem.h"
+
 class CanalTexto{
 private:
 	std::string nome;
-	//std::vector<Mensagem> mensagens;
+	std::vector<Mensagem> mensagens;
 };
 
 #endif
