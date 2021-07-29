@@ -45,7 +45,13 @@ string Sistema::quit() {
 }
 
 
+/*
+O seu trabalho foi o único que veio sem compilar, vou tirar 20% dos pontos por isso.
+*/
 
+/*
+A1.2 ok
+*/
 string Sistema::create_user (const string email, const string senha, const string nome) {
 	Usuario tempU;
 	tempU.email = email;
@@ -60,6 +66,9 @@ string Sistema::create_user (const string email, const string senha, const strin
 	return "Usuário criado";
 }
 
+/*
+A1.3 ok
+*/
 string Sistema::login(const string email, const string senha) {
 	Usuario check;
 	check.email = email;
@@ -73,6 +82,9 @@ string Sistema::login(const string email, const string senha) {
 	return "Senha ou usuário inválidos!";
 }
 
+/*
+A2.1 ok
+*/
 string Sistema::disconnect(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -81,6 +93,9 @@ string Sistema::disconnect(int id) {
 	return "Desconectando usuário "+ usuarios[id].email;
 }
 
+/*
+A2.2 ok
+*/
 string Sistema::create_server(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -94,6 +109,9 @@ string Sistema::create_server(int id, const string nome) {
 	return "Servidor criado";
 }
 
+/*
+A2.3 ok
+*/
 string Sistema::set_server_desc(int id, const string nome, const string descricao) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -109,6 +127,9 @@ string Sistema::set_server_desc(int id, const string nome, const string descrica
 	return "Descrição do servidor '"+nome+"' modificada!";
 }
 
+/*
+A2.4 ok
+*/
 string Sistema::set_server_invite_code(int id, const string nome, const string codigo) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -127,6 +148,9 @@ string Sistema::set_server_invite_code(int id, const string nome, const string c
 	else return "Código de convite do servidor '" + nome + "' modificado!";
 }
 
+/*
+A2.5 ok
+*/
 string Sistema::list_servers(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -141,6 +165,11 @@ string Sistema::list_servers(int id) {
 	return out;
 }
 
+/*
+A2.6 ok
+- Não vou tirar pontos por isso, mas faltou atualizar a tabela de usuários logados com as novas informações (caso um servidor que um usuário logado
+esteja visualizando seja removido)
+*/
 string Sistema::remove_server(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";

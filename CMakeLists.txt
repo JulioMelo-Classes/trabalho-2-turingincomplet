@@ -7,9 +7,11 @@ project(concordo VERSION 0.1 LANGUAGES CXX )
 include_directories( include )
 
 # Cria um executável com nome "concordo", adiciona neste executável os arquivos src/concordo.cpp src/sistema.cpp src/executor.cpp
+#faltou incluir aqui os outros .cpp
 add_executable( concordo
                 src/concordo.cpp
                 src/sistema.cpp 
-								src/executor.cpp )
+								src/executor.cpp
+                src/servidor.cpp )
 
 # The end
