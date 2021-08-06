@@ -8,6 +8,15 @@ class Usuario{
 	std::string nome;
 	std::string email;
 	std::string senha;
+
+	int servern;
+
+	/**
+	 * @brief constroi um usuario dado seu email
+	 *		@param email_ email do usuario a ser criado 
+	*/
+	Usuario(std::string email_);
+	
 };
 
 #endif

@@ -29,7 +29,7 @@ class Sistema {
 		/**
 		 * @brief procura se existe um dado servirdor
 		 *		@param nome nome do servidor a ser procurado
-		 *		@return "id" do servidor se encontrado ou -1 se não encontrado
+		 *		@return indice do servidor no vetor sercidores se encontrado ou -1 se não encontrado
 		*/
 		int findserver(std::string nome);
 

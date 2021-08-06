@@ -10,7 +10,7 @@ Servidor::Servidor(int usuarioDonoId_, string nome_) {
 string Servidor::getnome() {
 	return nome;
 }
-int  Servidor::getid() {
+int  Servidor::getdonoid() {
 	return usuarioDonoId;
 }
 string Servidor::getdesc() {
@@ -26,4 +26,58 @@ string Servidor::getconvite() {
 void Servidor::setconvite(std::string convitecode) {
 	codigoConvite = convitecode;
 }
+void Servidor::addparti(int p) {
+	for (auto it= participantesIDs.begin(); it!=participantesIDs.end(); it++) {
+		if (*it == p) {
+			return;
+		}
+	}
+	participantesIDs.push_back(p);
+}
 
+bool Servidor::removeparti(int p) {
+	for (auto it = participantesIDs.begin(); it != participantesIDs.end(); it++) {
+		if (*it == p) {
+			participantesIDs.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+void Servidor::serverreduc(std::vector<Usuario>& users) {
+	for (auto it = participantesIDs.begin(); it != participantesIDs.end(); it++) {
+		users[*it].servern--;
+	}
+}
+void Servidor::printparti(std::vector<Usuario>& users) {
+	for (auto it = participantesIDs.begin(); it != participantesIDs.end(); it++) {
+			cout << users[*it].nome<<endl;
+	}
+}
+void Servidor::printcanais() {
+	int n = (int)canaisTexto.size();
+	for (int ii=0; ii<n ; ii++) {
+			cout <<canaisTexto[ii].getnome()<<endl;
+	}
+}
+void Servidor::addcanal(CanalTexto c) {
+	canaisTexto.push_back(c);
+}
+int Servidor::findcanal(string cname) {
+	int n = (int)canaisTexto.size();
+	for (int ii=0; ii < n; ii++) {
+		if (cname == canaisTexto[ii].getnome()) {
+			return ii;
+		}
+	}
+	return -1;
+}
+void Servidor::addmensagems(string conteudo,int id, string cname) {
+	Mensagem m(conteudo, id);
+	int canalid = findcanal(cname);
+	canaisTexto[canalid].addmensagemc(m);
+}
+bool Servidor::printmensagenss(std::string cname, std::vector<Usuario>& users) {
+	int canalid = findcanal(cname);
+	return canaisTexto[canalid].printmensagensc(users);
+}

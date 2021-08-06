@@ -1,34 +1,53 @@
-# Base para a atividade 02 de LP1
+# Como compilar
 
-Use esse esqueleto de classes para iniciar a terceira atividade.
-
-Existe um executor que faz a interpretação dos comandos e executa o método correto do sistema.
-
-## Para compilar
-
-Com makefiles:
-```console
-mkdir build
-make
+Execute os comandos:
 ```
-
-Com cmake:
-```console
 mkdir build
 cd build
 cmake ..
 cmake --build .
 ```
 
-Escolha uma das duas formas de build e ignore a outra.
+# Executar programa
+Para executar o programa, esteja na pasta principal e use o comando:
 
-## Para executar
-Você pode rodar o sistema e em logo depois digitar os comandos seguidos de ENTER
-```console
-./concordo
+```
+build/concordo
+```
+# Executar testes
+Para redirecionar um dos arquivos de teste como entrada padrão utilize o comando:
+
+```
+build/concordo <data/"arquivo"
 ```
 
-Ou pode criar um arquivo de texto com uma lista de comandos (um por linha) e executar o sistema redirecionando esse arquivo como entrada padrão:
-```console
-./concordo < script_comandos.txt
+# Arquivos de teste
+## Os arquivos de teste são : 
+btest.txt
+
+```
+teste base : testa todas as funcionalidades basicas e alguns erros basicos
+```
+errlog.txt
+
+```
+erros de login : testa todos os comandos com ids não logados
+```
+
+serverES.txt
+
+```
+entrada e saida de servidores : testa as funcionalidades de entrada e saida de servidores
+```
+
+errvisual.txt
+
+```
+testa erros de visualização de servidores
+```
+
+errcanal.txt
+
+```
+testa erros de presença em canais
 ```
