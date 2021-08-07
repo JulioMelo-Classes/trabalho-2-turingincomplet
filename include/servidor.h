@@ -9,12 +9,12 @@
 
 class Servidor{
 private: 
-	int usuarioDonoId;
-	std::string nome;
-	std::string descricao;
-	std::string codigoConvite;
-	std::vector<CanalTexto> canaisTexto;
-	std::vector<int> participantesIDs;
+	int usuarioDonoId; //<! id do usuario dono
+	std::string nome; //<! nome do servidor
+	std::string descricao; //<! descrição do servidor
+	std::string codigoConvite; //<! codigoConvite do servirdor
+	std::vector<CanalTexto> canaisTexto; //<! vetor com os canais do servidor
+	std::vector<int> participantesIDs; //<! vetor com os ids dos usuarios participantes do servidor
 
 public: 
 	/**

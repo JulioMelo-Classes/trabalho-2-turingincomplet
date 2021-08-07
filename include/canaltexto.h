@@ -9,8 +9,8 @@
 
 class CanalTexto{
 private:
-	std::string nome;
-	std::vector<Mensagem> mensagens;
+	std::string nome; //<! nome do canaltexto
+	std::vector<Mensagem> mensagens; //<! mensagems do canaltexto
 
 public:
 	/**
