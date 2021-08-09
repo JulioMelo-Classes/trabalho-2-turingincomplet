@@ -1,6 +1,7 @@
 #ifndef USUARIO_H
 #define USUARIO_H
 #include <string>
+#include<memory>
 
 class Usuario{
  public:
@@ -18,5 +19,5 @@ class Usuario{
 	Usuario(std::string email_);
 	
 };
-
+using userptr= std::shared_ptr<Usuario>;
 #endif

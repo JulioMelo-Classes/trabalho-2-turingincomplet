@@ -9,13 +9,15 @@
 #include "servidor.h"
 #include "canaltexto.h"
 
+using serverptr = std::shared_ptr<Servidor>;
+using userstat = std::pair< serverptr, canalptr>;
 
 // Sistema deve concentrar todas as operações do Concordo
 class Sistema {
   private:
-		std::vector<Servidor> servidores; //<! um vetor com todos os servidores
-		std::vector<Usuario> usuarios; //<! um vetor com todos os usuários cadastrados
-		std::map< int, std::pair<std::string, std::string> > usuariosLogados; //<! um vetor contendo os usuários que logaram no sistema
+		std::vector<serverptr> servidores; //<! um vetor com todos os servidores
+		std::vector<userptr> usuarios; //<! um vetor com todos os usuários cadastrados
+		std::map<int, std::pair< serverptr, canalptr > > usuariosLogados; //<! um vetor contendo os usuários que logaram no sistema
 		
 
   public:
@@ -24,7 +26,7 @@ class Sistema {
 		 *		@param targu usuario a ser encontrado
 		 *		@return id do usuario se encontrado ou -1 se não encontrado
 		*/
-		int finduser(Usuario targu);
+		int finduser(userptr targu);
 
 		/**
 		 * @brief procura se existe um dado servirdor

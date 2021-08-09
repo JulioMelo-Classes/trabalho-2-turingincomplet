@@ -6,13 +6,13 @@
 using namespace std;
 
 /*metodos auxiliares*/
-int Sistema::finduser(Usuario targu) {
+int Sistema::finduser(userptr targu) {
 	int n = (int)usuarios.size();
 	for (int ii = 0; ii < n; ii++) {
-		if ((usuarios[ii].email == targu.email || targu.email.empty())
-			&& (usuarios[ii].senha == targu.senha || targu.senha.empty())
-			&& (usuarios[ii].nome == targu.nome || targu.nome.empty()))
-			return usuarios[ii].id;
+		if ((usuarios[ii]->email == targu->email || targu->email.empty())
+			&& (usuarios[ii]->senha == targu->senha || targu->senha.empty())
+			&& (usuarios[ii]->nome == targu->nome || targu->nome.empty()))
+			return usuarios[ii]->id;
 	}			
 	return -1;
 }
@@ -20,7 +20,7 @@ int Sistema::finduser(Usuario targu) {
 int Sistema::findserver(string nome) {
 	int n = (int)servidores.size();
 	for (int ii = 0; ii < n; ii++) {
-		if (servidores[ii].getnome() == nome)
+		if (servidores[ii]->getnome() == nome)
 			return ii;
 	}
 	return -1;
@@ -41,24 +41,25 @@ string Sistema::quit() {
 
 
 string Sistema::create_user (const string email, const string senha, const string nome) {
-	Usuario tempU(email);
-	int existe = finduser(tempU);
+	userptr u = make_shared<Usuario>(email);
+	int existe = finduser(u);
 	if (existe>=0) {
 		return "Usuário já existe!";
 	}
-	tempU.id = (int)usuarios.size();
-	tempU.nome=nome;
-	tempU.senha=senha;
-	usuarios.push_back(tempU);
+	u->id = (int)usuarios.size();
+	u->nome=nome;
+	u->senha=senha;
+	usuarios.push_back(u);
 	return "Usuário criado";
 }
 
 string Sistema::login(const string email, const string senha) {
-	Usuario check(email);
-	check.senha = senha;
+	userptr check = make_shared<Usuario>(email);
+	check->senha = senha;
 	int id = finduser(check);
 	if (id>=0) {
-		pair<string, string> u;
+		userstat u(nullptr,nullptr);
+
 		usuariosLogados[id] = u;
 		return "Logado como "+email;
 	}
@@ -70,7 +71,7 @@ string Sistema::disconnect(int id) {
 		return "Não está conectado";
 	}
 	usuariosLogados.erase(id);
-	return "Desconectando usuário "+ usuarios[id].email;
+	return "Desconectando usuário "+ usuarios[id]->email;
 }
 
 string Sistema::create_server(int id, const string nome) {
@@ -81,7 +82,7 @@ string Sistema::create_server(int id, const string nome) {
 	if (existe>=0) {
 		return "Servidor com esse nome já existe";
 	}
-	Servidor temp(id, nome);
+	serverptr temp = make_shared<Servidor>(id,nome);
 	servidores.push_back(temp);
 	return "Servidor criado";
 }
@@ -94,10 +95,10 @@ string Sistema::set_server_desc(int id, const string nome, const string descrica
 	if (serverid <0) {
 		return "Servidor '" +nome+"' não existe";
 	}
-	if (servidores[serverid].getdonoid() != id) {
+	if (servidores[serverid]->getdonoid() != id) {
 		return "Você não pode alterar a descrição de um servidor que não foi criado por você";
 	}
-	servidores[serverid].setdesc(descricao);
+	servidores[serverid]->setdesc(descricao);
 	return "Descrição do servidor '"+nome+"' modificada!";
 }
 
@@ -109,10 +110,10 @@ string Sistema::set_server_invite_code(int id, const string nome, const string c
 	if (serverid < 0) {
 		return "Servidor '" + nome + "' não existe";
 	}
-	if (servidores[serverid].getdonoid() != id) {
+	if (servidores[serverid]->getdonoid() != id) {
 		return "Você não pode alterar o código de convite de um servidor que não foi criado por você";
 	}
-	servidores[serverid].setconvite(codigo);
+	servidores[serverid]->setconvite(codigo);
 	if (codigo.empty()) {
 		return "Código de convite do servidor '" + nome + "' removido!";
 	}
@@ -126,7 +127,7 @@ string Sistema::list_servers(int id) {
 	string out;
 	int n = (int)servidores.size();
 	for (int ii = 0; ii < n; ii++) {
-		cout << servidores[ii].getnome() <<endl;
+		cout << servidores[ii]->getnome() <<endl;
 	}
 	return "";
 }
@@ -139,15 +140,18 @@ string Sistema::remove_server(int id, const string nome) {
 	if (serverid < 0) {
 		return "Servidor '" + nome + "' não encontrado";
 	}
-	if (servidores[serverid].getdonoid() != id) {
+	if (servidores[serverid]->getdonoid() != id) {
 		return "Você não é o dono do servidor "+nome;
 	}
-	servidores[serverid].serverreduc(usuarios);
-	for (auto it = usuariosLogados.begin(); it != usuariosLogados.end(); it++)
-		if (it->second.first == nome) {
-			pair<string, string> u;
+	servidores[serverid]->serverreduc(usuarios);
+	for (auto it = usuariosLogados.begin(); it != usuariosLogados.end(); it++) {
+		if (it->second.first == nullptr)
+			continue;
+		if (it->second.first->getnome() == nome) {
+			userstat u(nullptr, nullptr);
 			it->second = u;
 		}
+	}
 	servidores.erase(servidores.begin() + serverid);
 	return "Servidor '"+nome+"' removido";
 }
@@ -160,16 +164,16 @@ string Sistema::enter_server(int id, const string nome, const string codigo) {
 	if (serverid < 0) {
 		return "Servidor '" + nome + "' não encontrado";
 	}
-	pair<string, string> u(nome, "");
-	if (servidores[serverid].getdonoid() == id) {
+	userstat u(servidores[serverid], nullptr);
+	if (servidores[serverid]->getdonoid() == id) {
 		usuariosLogados[id]=u;
 	}
-	else if (servidores[serverid].getconvite() == "" || servidores[serverid].getconvite() == codigo) {
+	else if (servidores[serverid]->getconvite() == "" || servidores[serverid]->getconvite() == codigo) {
 		usuariosLogados[id] = u;
 	}
 	else return "Servidor requer código de convite";
-	usuarios[id].servern++;
-	servidores[serverid].addparti(id);
+	usuarios[id]->servern++;
+	servidores[serverid]->addparti(id);
 	return "Entrou no servidor com sucesso";
 }
 
@@ -177,7 +181,7 @@ string Sistema::leave_server(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuarios[id].servern == 0) {
+	if (usuarios[id]->servern == 0) {
 		return "Você não está em qualquer servidor";
 	}
 	int serverid = findserver(nome);
@@ -185,13 +189,15 @@ string Sistema::leave_server(int id, const string nome) {
 		return "Servidor '" + nome + "' não encontrado";
 	}
 	bool check;
-	check=servidores[serverid].removeparti(id);
+	check=servidores[serverid]->removeparti(id);
 	if (check) {
-		if (usuariosLogados[id].first == nome) {
-			pair<string, string> u;
-			usuariosLogados[id] = u;
+		if (usuariosLogados[id].first != nullptr) {
+			if (usuariosLogados[id].first->getnome() == nome) {
+				userstat u(nullptr, nullptr);
+				usuariosLogados[id] = u;
+			}
 		}
-		usuarios[id].servern--;
+		usuarios[id]->servern--;
 		return "Saindo do servidor " + nome;
 	}
 	else return "Você não está conectado no servidor";
@@ -201,11 +207,10 @@ string Sistema::list_participants(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].first == "") {
+	if (usuariosLogados[id].first == nullptr) {
 		return "Usuario não está vizualizando nenhum servidor";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	servidores[serverid].printparti(usuarios);
+	usuariosLogados[id].first->printparti(usuarios);
 	return "";
 }
 
@@ -213,11 +218,10 @@ string Sistema::list_channels(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].first == "") {
+	if (usuariosLogados[id].first == nullptr) {
 		return "Usuario não está vizualizando nenhum servidor";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	servidores[serverid].printcanais();
+	usuariosLogados[id].first->printcanais();
 	return"";
 }
 
@@ -225,16 +229,15 @@ string Sistema::create_channel(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].first == "") {
+	if (usuariosLogados[id].first == nullptr) {
 		return "Usuario não está vizualizando nenhum servidor";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	int existe=servidores[serverid].findcanal(nome);
+	int existe= usuariosLogados[id].first->findcanal(nome);
 	if (existe>=0) {
 		return "Canal de texto '" + nome + "' já existe!";
 	}
-	CanalTexto ct(nome);
-	servidores[serverid].addcanal(ct);
+	canalptr ct = make_shared<CanalTexto>(nome);
+	usuariosLogados[id].first->addcanal(ct);
 	return "Canal de texto '"+nome+"' criado";
 }
 
@@ -242,15 +245,14 @@ string Sistema::enter_channel(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].first == "") {
+	if (usuariosLogados[id].first == nullptr) {
 		return "Usuario não está vizualizando nenhum servidor";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	int existe = servidores[serverid].findcanal(nome);
+	int existe = usuariosLogados[id].first->findcanal(nome);
 	if (existe<0) {
 		return "Canal '"+nome+"' não existe";
 	}
-	usuariosLogados[id].second = nome;
+	usuariosLogados[id].second = usuariosLogados[id].first->returncptr(nome);
 	return "Entrou no canal '"+nome+"'";
 }
 
@@ -258,10 +260,10 @@ string Sistema::leave_channel(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].second == "") {
+	if (usuariosLogados[id].second == nullptr) {
 		return "Você não está em nenhum  canal";
 	}
-	usuariosLogados[id].second = "";
+	usuariosLogados[id].second = nullptr;
 	return "Saindo do canal";
 }
 
@@ -269,12 +271,10 @@ string Sistema::send_message(int id, const string mensagem) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].second == "") {
+	if (usuariosLogados[id].second == nullptr) {
 		return "Você não está em nenhum  canal";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	string nomecanal = usuariosLogados[id].second;
-	servidores[serverid].addmensagems(mensagem, id, nomecanal);
+	usuariosLogados[id].second->addmensagemc(mensagem, id);
 	return "";
 }
 
@@ -282,12 +282,10 @@ string Sistema::list_messages(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
 	}
-	if (usuariosLogados[id].second == "") {
+	if (usuariosLogados[id].second == nullptr) {
 		return "Você não está em nenhum  canal";
 	}
-	int serverid = findserver(usuariosLogados[id].first);
-	string nomecanal = usuariosLogados[id].second;
-	bool printed=servidores[serverid].printmensagenss(nomecanal, usuarios);
+	bool printed= usuariosLogados[id].second->printmensagensc(usuarios);
 	if (printed) {
 		return "";
 	}

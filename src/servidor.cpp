@@ -44,40 +44,35 @@ bool Servidor::removeparti(int p) {
 	}
 	return false;
 }
-void Servidor::serverreduc(std::vector<Usuario>& users) {
+void Servidor::serverreduc(std::vector<userptr>& users) {
 	for (auto it = participantesIDs.begin(); it != participantesIDs.end(); it++) {
-		users[*it].servern--;
+		users[*it]->servern--;
 	}
 }
-void Servidor::printparti(std::vector<Usuario>& users) {
+void Servidor::printparti(std::vector<userptr>& users) {
 	for (auto it = participantesIDs.begin(); it != participantesIDs.end(); it++) {
-			cout << users[*it].nome<<endl;
+			cout << users[*it]->nome<<endl;
 	}
 }
 void Servidor::printcanais() {
 	int n = (int)canaisTexto.size();
 	for (int ii=0; ii<n ; ii++) {
-			cout <<canaisTexto[ii].getnome()<<endl;
+			cout <<canaisTexto[ii]->getnome()<<endl;
 	}
 }
-void Servidor::addcanal(CanalTexto c) {
+void Servidor::addcanal(canalptr c) {
 	canaisTexto.push_back(c);
 }
 int Servidor::findcanal(string cname) {
 	int n = (int)canaisTexto.size();
 	for (int ii=0; ii < n; ii++) {
-		if (cname == canaisTexto[ii].getnome()) {
+		if (cname == canaisTexto[ii]->getnome()) {
 			return ii;
 		}
 	}
 	return -1;
 }
-void Servidor::addmensagems(string conteudo,int id, string cname) {
-	Mensagem m(conteudo, id);
+canalptr Servidor::returncptr(string cname) {
 	int canalid = findcanal(cname);
-	canaisTexto[canalid].addmensagemc(m);
-}
-bool Servidor::printmensagenss(std::string cname, std::vector<Usuario>& users) {
-	int canalid = findcanal(cname);
-	return canaisTexto[canalid].printmensagensc(users);
+	return canaisTexto[canalid];
 }

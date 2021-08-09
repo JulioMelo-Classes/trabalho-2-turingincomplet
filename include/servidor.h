@@ -3,9 +3,12 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <memory>
 
 #include "canaltexto.h"
 #include "usuario.h"
+
+using canalptr = std::shared_ptr<CanalTexto>;
 
 class Servidor{
 private: 
@@ -13,7 +16,7 @@ private:
 	std::string nome; //<! nome do servidor
 	std::string descricao; //<! descrição do servidor
 	std::string codigoConvite; //<! codigoConvite do servirdor
-	std::vector<CanalTexto> canaisTexto; //<! vetor com os canais do servidor
+	std::vector<canalptr> canaisTexto; //<! vetor com os canais do servidor
 	std::vector<int> participantesIDs; //<! vetor com os ids dos usuarios participantes do servidor
 
 public: 
@@ -77,14 +80,14 @@ public:
 	 * @brief reduz o contador de servidores entrados dos usuarios presentes em participantesIDs
 	 *		@param users vetor de usuarios a ser fornecido
 	*/
-	void serverreduc(std::vector<Usuario>& users);
+	void serverreduc(std::vector<userptr>& users);
 
 	/**
 	 * @brief imprime todos os nomes dos usuarios presentes em participantesIDs
 	 *		@param users vetor de usuarios a ser fornecido 
 	 *		@return uma string com todos os nomes dos usuarios presentes em participantesIDs
 	*/
-	void printparti(std::vector<Usuario>& users);
+	void printparti(std::vector<userptr>& users);
 
 	/**
 	 * @brief imprime todos os nomes dos canais presentes em canaisTexto
@@ -96,7 +99,7 @@ public:
 	 * @brief adiciona um canaltexto ao vetor canaisTexto
 	 *		@param c canaltexto a ser adicionado
 	*/
-	void addcanal(CanalTexto c);
+	void addcanal(canalptr c);
 
 	/**
 	 * @brief retorna o indice de posição de um canaltexto no vetor canaisTexto ou -1 se não encontrado
@@ -106,21 +109,11 @@ public:
 	int findcanal(std::string cname);
 
 	/**
-	 * @brief adiciona uma mensagem em um canaltexto presente no vetor canaisTexto
-	 *		@param conteudo conteudo da mensagem
-	 *		@param id id do usuario que mandou a mensagem
-	 *		@param cname nome do canaltexto a receber a mensagem
+	 * @brief retorna o canal com o nome fornecido
+	 *		@param cname nome do canal a ser fornecido
+	 *		@return canal com o nome fornecido
 	*/
-	void addmensagems(std::string conteudo, int id, std::string cname);
-
-	/**
-	 * @brief imprime as mensagems de algum canaltexto presente no vetor canaisTexto
-	 *		@param cname nome do canaltexto
-	 *		@param users vetor de usuarios que contem os nomes dos usuarios que mandaram mensagens
-	 *		@return true se imprimiu alguma mensagem, false caso contrário
-	*/
-	bool printmensagenss(std::string cname, std::vector<Usuario>& users);
-	
+	canalptr returncptr(std::string cname);
 };
 
 #endif
