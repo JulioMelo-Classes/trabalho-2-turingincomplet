@@ -58,9 +58,8 @@ string Sistema::login(const string email, const string senha) {
 	check->senha = senha;
 	int id = finduser(check);
 	if (id>=0) {
-		userstat u(nullptr,nullptr);
-
-		usuariosLogados[id] = u;
+		usuariosLogados[id].first = nullptr;
+		usuariosLogados[id].second = nullptr;
 		return "Logado como "+email;
 	}
 	return "Senha ou usuário inválidos!";
@@ -148,8 +147,8 @@ string Sistema::remove_server(int id, const string nome) {
 		if (it->second.first == nullptr)
 			continue;
 		if (it->second.first->getnome() == nome) {
-			userstat u(nullptr, nullptr);
-			it->second = u;
+			it->second.first= nullptr;
+			it->second.second = nullptr;
 		}
 	}
 	servidores.erase(servidores.begin() + serverid);
@@ -164,12 +163,13 @@ string Sistema::enter_server(int id, const string nome, const string codigo) {
 	if (serverid < 0) {
 		return "Servidor '" + nome + "' não encontrado";
 	}
-	userstat u(servidores[serverid], nullptr);
 	if (servidores[serverid]->getdonoid() == id) {
-		usuariosLogados[id]=u;
+		usuariosLogados[id].first = servidores[serverid];
+		usuariosLogados[id].second = nullptr;
 	}
 	else if (servidores[serverid]->getconvite() == "" || servidores[serverid]->getconvite() == codigo) {
-		usuariosLogados[id] = u;
+		usuariosLogados[id].first = servidores[serverid];
+		usuariosLogados[id].second = nullptr;
 	}
 	else return "Servidor requer código de convite";
 	usuarios[id]->servern++;
@@ -193,8 +193,8 @@ string Sistema::leave_server(int id, const string nome) {
 	if (check) {
 		if (usuariosLogados[id].first != nullptr) {
 			if (usuariosLogados[id].first->getnome() == nome) {
-				userstat u(nullptr, nullptr);
-				usuariosLogados[id] = u;
+				usuariosLogados[id].first = nullptr;
+				usuariosLogados[id].second = nullptr;
 			}
 		}
 		usuarios[id]->servern--;
