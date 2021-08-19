@@ -155,6 +155,9 @@ string Sistema::remove_server(int id, const string nome) {
 	return "Servidor '"+nome+"' removido";
 }
 
+/*
+A2.7 ok
+*/
 string Sistema::enter_server(int id, const string nome, const string codigo) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -177,6 +180,9 @@ string Sistema::enter_server(int id, const string nome, const string codigo) {
 	return "Entrou no servidor com sucesso";
 }
 
+/*
+A2.8 ok
+*/
 string Sistema::leave_server(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -203,6 +209,9 @@ string Sistema::leave_server(int id, const string nome) {
 	else return "Você não está conectado no servidor";
 }
 
+/*
+A2.9 ok
+*/
 string Sistema::list_participants(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -214,6 +223,9 @@ string Sistema::list_participants(int id) {
 	return "";
 }
 
+/*
+B1.1 ok
+*/
 string Sistema::list_channels(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -225,6 +237,9 @@ string Sistema::list_channels(int id) {
 	return"";
 }
 
+/*
+B1.2 ok
+*/
 string Sistema::create_channel(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -241,6 +256,9 @@ string Sistema::create_channel(int id, const string nome) {
 	return "Canal de texto '"+nome+"' criado";
 }
 
+/*
+B1.3 ok
+*/
 string Sistema::enter_channel(int id, const string nome) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -256,6 +274,9 @@ string Sistema::enter_channel(int id, const string nome) {
 	return "Entrou no canal '"+nome+"'";
 }
 
+/*
+B1.4 ok
+*/
 string Sistema::leave_channel(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -267,6 +288,9 @@ string Sistema::leave_channel(int id) {
 	return "Saindo do canal";
 }
 
+/*
+B2.1 ok
+*/
 string Sistema::send_message(int id, const string mensagem) {
 	if (!logado(id)) {
 		return "Não está conectado";
@@ -278,6 +302,9 @@ string Sistema::send_message(int id, const string mensagem) {
 	return "";
 }
 
+/*
+B2.2 ok
+*/
 string Sistema::list_messages(int id) {
 	if (!logado(id)) {
 		return "Não está conectado";

@@ -1,5 +1,5 @@
 # Como compilar
-
+<!--blz vou considerar 100% a parte correspondente aos testes!-->
 Execute os comandos:
 ```
 mkdir build

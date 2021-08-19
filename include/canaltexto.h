@@ -9,7 +9,9 @@
 #include "usuario.h"
 
 using mensagemptr = std::shared_ptr<Mensagem>;
-
+/*
+Cp2 ok
+*/
 class CanalTexto{
 private:
 	std::string nome; //<! nome do canaltexto
@@ -37,7 +39,7 @@ public:
 	/**
 	 * @brief imprime todas as mensagems do canaltexto
 	 *		@param users vetor de usuarios que contem os nomes dos usuarios que mandaram mensagens no canaltexto
-	 *		@return true se imprimiu alguma mensagem, false caso contrário
+	 *		@return true se imprimiu alguma mensagem, false caso contrï¿½rio
 	*/
 	bool printmensagensc(std::vector<userptr>& users);
 };

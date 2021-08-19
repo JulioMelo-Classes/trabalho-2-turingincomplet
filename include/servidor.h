@@ -10,6 +10,9 @@
 
 using canalptr = std::shared_ptr<CanalTexto>;
 
+/*
+cp2 ok
+*/
 class Servidor{
 private: 
 	int usuarioDonoId; //<! id do usuario dono

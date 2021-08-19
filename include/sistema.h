@@ -13,6 +13,8 @@ using serverptr = std::shared_ptr<Servidor>;
 using userstat = std::pair< serverptr, canalptr>;
 
 // Sistema deve concentrar todas as operações do Concordo
+
+//extra alocação dinâmica 100% (vou considerar apenas para Pedro, como combinado na apresentação)
 class Sistema {
   private:
 		std::vector<serverptr> servidores; //<! um vetor com todos os servidores
